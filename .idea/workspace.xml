@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="19188cff-9c48-4078-96b1-5b76be52e38d" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1sQnjwLFv7YNxGE5QSy5U11qPOm" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Project\CrossModalityMatch\model" />
+      <recent name="D:\Project\CrossModalityMatch\utils" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Project\CrossModalityMatch" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="tmp" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="CrossModalityMatch" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tmp.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.tmp" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="showServicesTree" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="19188cff-9c48-4078-96b1-5b76be52e38d" name="Default Changelist" comment="" />
+      <created>1620813819715</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1620813819715</updated>
+      <workItem from="1620813821049" duration="9624000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="330" y="94" key="#Deployment" timestamp="1620824193998">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state x="330" y="94" key="#Deployment/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1620824193998" />
+    <state width="1430" height="224" key="GridCell.Tab.0.bottom" timestamp="1620824418396">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state width="1430" height="224" key="GridCell.Tab.0.bottom/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1620824418396" />
+    <state width="1430" height="224" key="GridCell.Tab.0.center" timestamp="1620824418396">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state width="1430" height="224" key="GridCell.Tab.0.center/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1620824418396" />
+    <state width="1430" height="224" key="GridCell.Tab.0.left" timestamp="1620824418396">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state width="1430" height="224" key="GridCell.Tab.0.left/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1620824418396" />
+    <state width="1430" height="224" key="GridCell.Tab.0.right" timestamp="1620824418396">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state width="1430" height="224" key="GridCell.Tab.0.right/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1620824418396" />
+    <state x="241" y="77" key="SettingsEditor" timestamp="1620824169938">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state x="241" y="77" key="SettingsEditor/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1620824169938" />
+    <state x="479" y="165" key="com.jetbrains.plugins.remotesdk.ui.RemoteMappingsConfiguration" timestamp="1620824167844">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state x="479" y="165" key="com.jetbrains.plugins.remotesdk.ui.RemoteMappingsConfiguration/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1620824167844" />
+    <state x="616" y="169" key="ftp.server.browser" timestamp="1620824106498">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state x="616" y="169" key="ftp.server.browser/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1620824106498" />
+    <state x="400" y="181" width="672" height="678" key="search.everywhere.popup" timestamp="1620817867540">
+      <screen x="0" y="0" width="1474" height="864" />
+    </state>
+    <state x="400" y="181" width="672" height="678" key="search.everywhere.popup/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1620817867540" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/CrossModalityMatch$tmp.coverage" NAME="tmp Coverage Results" MODIFIED="1620824418392" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
