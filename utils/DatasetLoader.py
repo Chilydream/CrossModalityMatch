@@ -1,5 +1,5 @@
 import torch
-import numpy
+import numpy as np
 import random
 import pdb
 import os
@@ -8,6 +8,8 @@ import time
 from queue import Queue
 from torch.utils.data.dataset import Dataset
 from torch.utils.data import DataLoader
+from tqdm import tqdm
+
 from utils.GetDataFromFile import loadWAV, get_frames
 
 
@@ -45,7 +47,7 @@ class MyDataset(Dataset):
 						print('%s is too short'%(data[0]))
 				else:
 					raise
-		for info in self.info_list:
+		for info in tqdm(self.info_list):
 			mp4name, wavname = info[0], info[1]
 			mp4data = get_frames(mp4name, max_frames=self.maxFrames, start_frame=0)
 			wavdata = loadWAV(wavname, max_frames=self.maxFrames*4, start_frame=0)
@@ -62,8 +64,9 @@ class MyDataset(Dataset):
 
 
 class MyDataLoader(DataLoader):
-	def __init__(self, dataset_file_name, batch_size, eval_mode=False, **kwargs):
+	def __init__(self, dataset_file_name, batch_size, num_workers, eval_mode=False, **kwargs):
 		self.dataset = MyDataset(dataset_file_name, eval_mode)
-		super().__init__(self.dataset, shuffle=True, batch_size=batch_size, drop_last=True)
+		super().__init__(self.dataset, shuffle=True, batch_size=batch_size,
+		                 drop_last=True, num_workers=num_workers)
 		self.nFiles = len(self.dataset)
 

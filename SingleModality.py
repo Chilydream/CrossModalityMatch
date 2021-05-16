@@ -5,7 +5,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchsnooper
+from pytorch_metric_learning import losses
 
+from config.TrainConfig import TRAIN_PARAMETER as TP
 from model.SyncNetModelFBank import SyncNetModel
 from utils.DatasetLoader import MyDataLoader
 from utils.InfoNCE import InfoNCE
@@ -42,6 +44,7 @@ def acc_valid(valid_loader, model, temperature=0.07):
 
 
 def main():
+	# =================参数设置=================================
 	batch_size = 30
 	learning_rate = 0.001
 	exp_path = 'data/exp12/'
@@ -50,6 +53,8 @@ def main():
 		os.makedirs(model_path)
 	result_path = exp_path+'result.txt'
 	fw = open(result_path, 'w')
+
+	# =================加载数据================================
 	loader_timer = Meter('Time', 'time', ':3.0f')
 	print('Start loading dataset')
 	loader_timer.set_start_time(time.time())
@@ -58,13 +63,16 @@ def main():
 	valid_loader = MyDataLoader("data/test.txt", batch_size)
 	loader_timer.update(time.time())
 	print('Finish loading dataset', loader_timer)
+
+	# ================加载模型==================================
 	model = SyncNetModel(stride=5).cuda()
-	# optim = torch.optim.SGD(model.parameters(), lr=learning_rate, momentum=0.9, weight_decay=1e-5)
-	optim = torch.optim.Adam(model.parameters(), 0.001)
+	optim = torch.optim.Adam(model.parameters(), learning_rate)
+	criterion = losses.NTXentLoss(0.07)
 	temperature = 0.07
 	loss = Meter('Loss', 'avg', ':.2f')
 	epoch_timer = Meter('Time', 'time', ':3.0f')
 
+	# ================开始训练==================================
 	for epoch in range(100):
 		print('\nEpoch: %d'%epoch)
 		batch_cnt = 0
@@ -76,12 +84,14 @@ def main():
 			_, video_id = model.forward_vid(data_video)
 			# (batch_size, feature, time_size)
 
-			audio_random_id = SampleFromTime(audio_id).unsqueeze(2)
-			video_random_id = SampleFromTime(video_id).unsqueeze(2)
+			audio_random_id = SampleFromTime(audio_id)
+			video_random_id = SampleFromTime(video_id)
 			# (batch_size, feature)
 
-			audio_id_loss, _ = InfoNCE(data_label, audio_random_id, temperature=temperature)
-			video_id_loss, _ = InfoNCE(data_label, video_random_id, temperature=temperature)
+			# audio_id_loss, _ = InfoNCE(data_label, audio_random_id, temperature=temperature)
+			# video_id_loss, _ = InfoNCE(data_label, video_random_id, temperature=temperature)
+			audio_id_loss = criterion(audio_random_id, data_label)
+			video_id_loss = criterion(video_random_id, data_label)
 			# audio_acc = topk_acc(audio_score, data_label)
 			# video_acc = topk_acc(video_score, data_label)
 
@@ -98,8 +108,6 @@ def main():
 		loss.reset()
 		torch.cuda.empty_cache()
 		torch.save(model.state_dict(), model_path+"/model%09d.model"%epoch)
-		if (epoch+1)%5==0:
-			acc_valid(valid_loader, model)
 	fw.close()
 
 
