@@ -1,16 +1,11 @@
 import os
 import time
-import numpy as np
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torchsnooper
 from pytorch_metric_learning import losses
 
-from config.TrainConfig import TRAIN_PARAMETER as TP
 from model.SyncNetModelFBank import SyncNetModel
 from utils.DatasetLoader import MyDataLoader
-from utils.InfoNCE import InfoNCE
+from criterion.InfoNCE import InfoNCE
 from utils.Meter import Meter
 from utils.accuracy import topk_acc
 from utils.sampler import SampleFromTime

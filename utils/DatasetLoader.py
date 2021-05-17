@@ -14,12 +14,12 @@ from utils.GetDataFromFile import loadWAV, get_frames
 
 
 class MyDataset(Dataset):
-	def __init__(self, dataset_file_name, eval_mode=False, maxFrames=40):
+	def __init__(self, dataset_file_name, unique_mode=False, maxFrames=40):
 		self.dataset_file_name = dataset_file_name
 		self.info_list = []
 		self.data_list = []
 		self.ndata = None
-		self.eval_mode = eval_mode
+		self.eval_mode = unique_mode
 		self.maxFrames = maxFrames
 
 		people_dict = dict()
@@ -37,11 +37,11 @@ class MyDataset(Dataset):
 							people_dict[people] = people_cnt
 							people_cnt += 1
 							data.append(people_cnt)
-							if eval_mode:
+							if unique_mode:
 								self.info_list.append(data)
 						else:
 							data.append(people_dict[people])
-						if not eval_mode:
+						if not unique_mode:
 							self.info_list.append(data)
 					else:
 						print('%s is too short'%(data[0]))
@@ -54,7 +54,7 @@ class MyDataset(Dataset):
 			mp4data, wavdata = mp4data.squeeze(), wavdata.squeeze()
 			self.data_list.append((mp4data, wavdata, info[-1]))
 		self.ndata = len(self.data_list)
-		print('Evalmode %s - %d clips'%(self.eval_mode, len(self.data_list)))
+		print('Unique Mode %s - %d clips'%(self.eval_mode, len(self.data_list)))
 
 	def __getitem__(self, item):
 		return self.data_list[item]

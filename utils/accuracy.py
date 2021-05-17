@@ -10,3 +10,13 @@ def topk_acc(score_mat, label, k=1):
 		if label[i] in label[max_idx[1][i]]:
 			correct_cnt += 1
 	return correct_cnt/total_cnt
+
+
+def rand_acc(data_label):
+	batch_size = data_label.size()[0]
+	rand_correct_cnt = 0
+	for i in range(batch_size):
+		for j in range(batch_size):
+			if data_label[i] == data_label[j]:
+				rand_correct_cnt += 1
+	return rand_correct_cnt/(batch_size**2)

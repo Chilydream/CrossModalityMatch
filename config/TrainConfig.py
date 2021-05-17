@@ -1,12 +1,14 @@
-from utils.InfoNCE import InfoNCE
-from pytorch_metric_learning.losses import NTXentLoss
+from criterion.InfoNCE import InfoNCE
 
 TRAIN_PARAMETER = {
+	'mode': 'train',
+	'pretrain_model': '/GPUFS/ruc_tliu_1/fsx/CrossModalityMatch/exp/1/cache/model000000009.model',
+
 	'epoch': 100,
 	'batch_size': 30,
 	'embedding_size': 1024,
 	'num_workers': 4,
-	'lr': 1e-3,
+	'lr': 1e-5,
 	'temperature': 0.07,
 	'temporal_gap': 5,
 	'valid_step': 5,
@@ -17,8 +19,8 @@ TRAIN_PARAMETER = {
 	'train_list': "data/train.txt",
 	'test_list': 'data/test.txt',
 
-	'reduce_method': 'mean',
-	# 'criterion': NTXentLoss,
+	'reduce_method': 'random',
 	'criterion': InfoNCE,
 	'affine': False,
+	'affine_lr': 1e-5,
 }
