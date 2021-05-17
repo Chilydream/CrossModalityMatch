@@ -2,18 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="19188cff-9c48-4078-96b1-5b76be52e38d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/criterion/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CrossModality.py" beforeDir="false" afterPath="$PROJECT_DIR$/CrossModality.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SingleModality.py" beforeDir="false" afterPath="$PROJECT_DIR$/SingleModality.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/TrainConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/TrainConfig.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tmp.py" beforeDir="false" afterPath="$PROJECT_DIR$/tmp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/CrossEntropy.py" beforeDir="false" afterPath="$PROJECT_DIR$/criterion/CrossEntropy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/DatasetLoader.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/DatasetLoader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/GetConsoleArgs.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/GetConsoleArgs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/InfoNCE.py" beforeDir="false" afterPath="$PROJECT_DIR$/criterion/InfoNCE.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/UnsupervisedLoss.py" beforeDir="false" afterPath="$PROJECT_DIR$/criterion/UnsupervisedLoss.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/accuracy.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/accuracy.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,6 +102,10 @@
       <workItem from="1620905202160" duration="1525000" />
       <workItem from="1620974703730" duration="12247000" />
       <workItem from="1621063857409" duration="32253000" />
+      <workItem from="1621215676749" duration="181000" />
+      <workItem from="1621217355988" duration="593000" />
+      <workItem from="1621223415468" duration="57000" />
+      <workItem from="1621239272020" duration="2325000" />
     </task>
     <task id="LOCAL-00001" summary="为手写的criterion添加了cuda函数">
       <created>1621153572158</created>
@@ -119,7 +114,14 @@
       <option name="project" value="LOCAL" />
       <updated>1621153572158</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="新增了预加载模型，计算了随机猜测的准确率">
+      <created>1621215752126</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1621215752126</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -127,7 +129,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="为手写的criterion添加了cuda函数" />
-    <option name="LAST_COMMIT_MESSAGE" value="为手写的criterion添加了cuda函数" />
+    <MESSAGE value="新增了预加载模型，计算了随机猜测的准确率" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增了预加载模型，计算了随机猜测的准确率" />
   </component>
   <component name="WindowStateProjectService">
     <state x="330" y="94" key="#Deployment" timestamp="1620824193998">
@@ -146,9 +149,10 @@
       <screen x="0" y="0" width="1474" height="864" />
     </state>
     <state x="251" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1621080748926" />
-    <state x="354" y="27" key="CommitChangelistDialog2" timestamp="1621153569922">
+    <state x="99" y="27" width="1375" height="810" key="CommitChangelistDialog2" timestamp="1621215749519">
       <screen x="0" y="0" width="1474" height="864" />
     </state>
+    <state x="99" y="27" width="1375" height="810" key="CommitChangelistDialog2/0.0.1474.864@0.0.1474.864" timestamp="1621215749519" />
     <state x="354" y="27" key="CommitChangelistDialog2/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1621153569922" />
     <state x="518" y="190" key="FileChooserDialogImpl" timestamp="1620895055827">
       <screen x="0" y="0" width="1474" height="864" />
@@ -174,9 +178,10 @@
       <screen x="0" y="0" width="1474" height="864" />
     </state>
     <state x="241" y="77" key="SettingsEditor/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1620824169938" />
-    <state x="330" y="168" key="Vcs.Push.Dialog.v2" timestamp="1621153576343">
+    <state x="330" y="168" key="Vcs.Push.Dialog.v2" timestamp="1621215761421">
       <screen x="0" y="0" width="1474" height="864" />
     </state>
+    <state x="330" y="168" key="Vcs.Push.Dialog.v2/0.0.1474.864@0.0.1474.864" timestamp="1621215761421" />
     <state x="330" y="168" key="Vcs.Push.Dialog.v2/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1621153576343" />
     <state x="93" y="93" width="1354" height="678" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1621068208889">
       <screen x="0" y="0" width="1474" height="864" />

@@ -168,7 +168,6 @@ def main():
 			meter.reset()
 		if TP['gpu']:
 			torch.cuda.empty_cache()
-		# torch.save(sync_net.state_dict(), cache_dir+"/model%09d.model"%epoch)
 		if TP['affine']:
 			torch.save({'epoch': epoch+1,
 			            'sync_net': sync_net.state_dict(),
