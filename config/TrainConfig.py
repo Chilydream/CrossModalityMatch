@@ -10,9 +10,13 @@ TRAIN_PARAMETER = {
 	'num_workers': 4,
 	'lr': 1e-5,
 	'temperature': 0.07,
-	'temporal_gap': 5,
+	'temporal_gap': 1,
+	'merge_win': 3,
 	'valid_step': 5,
 	'gpu': True,
+
+	'alphaI': 1.0,
+	'alphaC': 1.0,
 
 	'exp_dir': 'exp',
 	'exp_num': '1',

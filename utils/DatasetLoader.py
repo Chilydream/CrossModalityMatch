@@ -14,7 +14,7 @@ from utils.GetDataFromFile import loadWAV, get_frames
 
 
 class MyDataset(Dataset):
-	def __init__(self, dataset_file_name, unique_mode=False, maxFrames=40):
+	def __init__(self, dataset_file_name, unique_mode=False, maxFrames=44):
 		self.dataset_file_name = dataset_file_name
 		self.info_list = []
 		self.data_list = []

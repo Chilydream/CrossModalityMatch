@@ -1,9 +1,12 @@
+import math
 import os
 import time
 import torch
 from torch import nn
 
+from criterion.SyncLoss import SyncLoss
 from model.SyncNetModelFBank import SyncNetModel
+from utils.ContentTransform import ContentTransform
 from utils.DatasetLoader import MyDataLoader
 from utils.GetConsoleArgs import get_console_args
 from utils.Meter import Meter
@@ -55,9 +58,16 @@ def main():
 	get_console_args()
 	start_epoch = 0
 	batch_size = TP['batch_size']
-	dumb_label = torch.arange(batch_size)
+	time_size = math.ceil(40/TP['temporal_gap'])
+	merge_win = TP['merge_win']
+	merge_size = (time_size-1)//merge_win+1
+	alphaI = TP['alphaI']
+	alphaC = TP['alphaC']
+	dumb_id_label = torch.arange(batch_size)
+	dumb_ct_label = torch.arange(merge_size)
 	if TP['gpu']:
-		dumb_label = dumb_label.cuda()
+		dumb_id_label = dumb_id_label.cuda()
+		dumb_ct_label = dumb_ct_label.cuda()
 	learning_rate = TP['lr']
 	cur_exp_path = os.path.join(TP['exp_dir'], TP['exp_num'])
 	cache_dir = os.path.join(cur_exp_path, 'cache')
@@ -87,9 +97,15 @@ def main():
 	epoch_id_loss = Meter('ID Loss', 'avg', ':.2f')
 	epoch_id_acc = Meter('ID ACC', 'avg', ':.2f', '%,')
 	epoch_id_rand_acc = Meter('ID Rand ACC', 'avg', ':.2f', '%,')
+	epoch_ct_loss = Meter('CT Loss', 'avg', ':.2f')
+	epoch_ct_acc = Meter('CT ACC', 'avg', ':.2f', '%,')
+	epoch_ct_rand_acc = Meter('CT Rand ACC', 'avg', ':.2f', '%,')
 	epoch_timer = Meter('Time', 'time', ':3.0f')
-	epoch_reset_list = [epoch_loss_final, epoch_id_loss, epoch_id_acc, epoch_timer,
-	                    epoch_id_rand_acc]
+
+	epoch_ct_rand_acc.update(1/time_size)
+	epoch_reset_list = [epoch_loss_final, epoch_timer,
+	                    epoch_id_loss, epoch_id_acc, epoch_id_rand_acc,
+	                    epoch_ct_loss, epoch_ct_acc, ]
 	print('%sTrain Parameters%s'%('='*20, '='*20))
 	print(TP)
 	print('')
@@ -132,20 +148,29 @@ def main():
 			data_video, data_audio, data_label = data
 			if TP['gpu']:
 				data_video, data_audio = data_video.cuda(), data_audio.cuda()
-			_, audio_id = sync_net.forward_aud(data_audio)
-			_, video_id = sync_net.forward_vid(data_video)
+			audio_ct, audio_id = sync_net.forward_aud(data_audio)
+			video_ct, video_id = sync_net.forward_vid(data_video)
 			# (batch_size, feature, time_size)
 
+			# ======================计算身份损失===========================
 			audio_random_id = SampleFromTime(audio_id, TP['reduce_method'])
 			video_random_id = SampleFromTime(video_id, TP['reduce_method'])
 			# (batch_size, feature)
 
-			batch_id_loss, id_score = criterion(dumb_label, audio_random_id, video_random_id)
-			# batch_id_loss, id_score = criterion(data_label, audio_random_id, video_random_id)
+			batch_id_loss, id_score = criterion(dumb_id_label, audio_random_id, video_random_id)
 			batch_id_acc = topk_acc(id_score, data_label, 1)
 			id_rand_acc = rand_acc(data_label)
 
-			batch_loss_final = batch_id_loss
+			# ======================计算内容损失===========================
+			batch_ct_loss = 0
+			for a_merge, v_merge in ContentTransform(audio_ct, video_ct, merge_win, TP['gpu']):
+				tmp_ct_loss, tmp_ct_score = criterion(dumb_ct_label, a_merge, v_merge)
+				batch_ct_loss += tmp_ct_loss
+				epoch_ct_acc.update(topk_acc(tmp_ct_score, dumb_ct_label)*100)
+			batch_ct_loss /= batch_size
+
+			optimizer.zero_grad()
+			batch_loss_final = alphaI*batch_id_loss + alphaC*batch_ct_loss
 			batch_loss_final.backward()
 			nn.utils.clip_grad_norm_(sync_net.parameters(), max_norm=10, norm_type=2)
 			if TP['affine']:

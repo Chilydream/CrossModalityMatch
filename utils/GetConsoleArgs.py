@@ -18,9 +18,13 @@ def get_console_args():
 	parser.add_argument('--num_workers', type=int, default=TP['num_workers'])
 	parser.add_argument('--lr', type=float, default=TP['lr'])
 	parser.add_argument('--temperature', type=float, default=TP['temperature'])
-	parser.add_argument('--temporal_gap', type=int, default=TP['temporal_gap'])
+	parser.add_argument('-t', '--temporal_gap', type=int, default=TP['temporal_gap'])
+	parser.add_argument('-w', '--merge_win', type=int, default=TP['merge_win'])
 	parser.add_argument('-v', '--valid_step', type=int, default=TP['valid_step'])
 	parser.add_argument('--cpu', action='store_true', default=not TP['gpu'])
+
+	parser.add_argument('-i', '--alphaI', type=float, default=TP['alphaI'])
+	parser.add_argument('-c', '--alphaC', type=float, default=TP['alphaC'])
 
 	parser.add_argument('--exp_dir', type=str, default=TP['exp_dir'])
 	parser.add_argument('-e', '--exp_num', type=str, default=TP['exp_num'])
