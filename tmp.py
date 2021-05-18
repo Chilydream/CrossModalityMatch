@@ -1,13 +1,31 @@
-import wandb
+# import wandb
 import math
 import random
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
 
 from criterion.CrossEntropy import CrossEntropy
+from criterion.InfoNCE import InfoNCE
 from model.AffineModel import AffineModel
 
-math.ceil(40/5)
+a = torch.rand((30, 16, 1), dtype=torch.float32).cuda()
+b = torch.rand((30, 16, 1), dtype=torch.float32).cuda()
+# criterion = InfoNCE(affine=True)
+criterion = CrossEntropy(affine=True)
+optimizer = torch.optim.Adam(criterion.parameters(), lr=0.001)
+label = torch.arange(30,).cuda()
+cos_score1 = F.cosine_similarity(a.expand(-1, -1, 30), b.expand(-1, -1, 30).transpose(0, 2))
+loss1 = F.cross_entropy(cos_score1, label)
+print(loss1)
+
+for i in range(1000):
+	loss2, _ = criterion(label, a, b)
+	optimizer.zero_grad()
+	loss2.backward()
+	optimizer.step()
+	print(loss2.item())
 
 
 # wandb.init(project="test-drive", config={

@@ -4,7 +4,6 @@ import time
 import torch
 from torch import nn
 
-from criterion.SyncLoss import SyncLoss
 from model.SyncNetModelFBank import SyncNetModel
 from utils.ContentTransform import ContentTransform
 from utils.DatasetLoader import MyDataLoader
@@ -18,38 +17,68 @@ from config.TrainConfig import TRAIN_PARAMETER as TP
 # @torchsnooper.snoop()
 def acc_valid(valid_loader, sync_net, criterion, logfile=None):
 	print('\nStart evaluate')
+	batch_size = TP['batch_size']
+	time_size = math.ceil(40/TP['temporal_gap'])
+	merge_win = TP['merge_win']
+	merge_size = (time_size-1)//merge_win+1
+	alphaI = TP['alphaI']
+	alphaC = TP['alphaC']
+	dumb_id_label = torch.arange(batch_size)
+	dumb_ct_label = torch.arange(merge_size)
+
 	valid_timer = Meter('Valid Timer', 'time', ':3.0f')
-	valid_id_acc = Meter('Valid ID ACC', 'avg', ':.2f', '%,')
-	valid_id_rand_acc = Meter('Valid ID Rand ACC', 'avg', ':.2f', '%')
-	valid_loss = Meter('Valid Loss', 'avg', ':.2f')
+	valid_id_acc = Meter('ID ACC', 'avg', ':.2f', '%,')
+	valid_id_rand_acc = Meter('ID Rand ACC', 'avg', ':.2f', '%')
+	valid_ct_acc = Meter('CT ACC', 'avg', ':.2f', '%,')
+	valid_ct_rand_acc = Meter('CT Rand ACC', 'avg', ':.2f', '%,')
+	valid_ct_rand_acc.update(1/merge_size)
+	valid_loss = Meter('Loss', 'avg', ':.2f')
+	valid_id_loss = Meter('ID Loss', 'avg', ':.2f')
+	valid_ct_loss = Meter('CT Loss', 'avg', ':.2f')
 	valid_timer.set_start_time(time.time())
 	with torch.no_grad():
 		for data in valid_loader:
 			data_video, data_audio, data_label = data
 			data_video, data_audio = data_video.cuda(), data_audio.cuda()
-			_, audio_id = sync_net.forward_aud(data_audio)
-			_, video_id = sync_net.forward_vid(data_video)
+			audio_ct, audio_id = sync_net.forward_aud(data_audio)
+			video_ct, video_id = sync_net.forward_vid(data_video)
 			# (batch_size, feature, time_size)
 
-			audio_random_id = SampleFromTime(audio_id).unsqueeze(2)
-			video_random_id = SampleFromTime(video_id).unsqueeze(2)
+			# =========================计算身份损失================================
+			audio_random_id = SampleFromTime(audio_id, TP['reduce_method']).unsqueeze(2)
+			video_random_id = SampleFromTime(video_id, TP['reduce_method']).unsqueeze(2)
 			# (batch_size, feature, 1)
 
 			id_loss, id_score = criterion(data_label, audio_random_id, video_random_id)
 			id_acc = topk_acc(id_score, data_label)
 			id_rand_acc = rand_acc(data_label)
 
-			batch_loss = id_loss
+			# =========================计算内容损失================================
+			ct_loss = 0
+			for a_merge, v_merge in ContentTransform(audio_ct, video_ct, merge_win, TP['gpu']):
+				tmp_ct_loss, tmp_ct_score = criterion(dumb_ct_label, a_merge, v_merge)
+				ct_loss += tmp_ct_loss
+				valid_ct_acc.update(topk_acc(tmp_ct_score, dumb_ct_label)*100)
+			ct_loss /= batch_size
+
+			batch_loss = alphaI*id_loss+alphaC*ct_loss
 
 			valid_timer.update(time.time())
 			valid_id_acc.update(id_acc*100)
 			valid_id_rand_acc.update(id_rand_acc*100)
+			valid_id_loss.update(id_loss.item())
+			valid_ct_loss.update(ct_loss.item())
 			valid_loss.update(batch_loss.item())
 
-			print('\r', valid_timer, valid_loss, valid_id_acc, valid_id_rand_acc, end='       ')
+			print('\r', valid_timer, valid_loss,
+			      valid_id_acc, valid_id_rand_acc, valid_id_loss,
+			      valid_ct_acc, valid_ct_rand_acc, valid_ct_loss,
+			      end='       ')
 			torch.cuda.empty_cache()
 		if logfile is not None:
-			print(valid_loss, valid_id_acc, file=logfile)
+			print(valid_loss, valid_id_acc, valid_id_rand_acc, valid_id_loss,
+			      valid_ct_acc, valid_ct_rand_acc, valid_ct_loss,
+			      file=logfile)
 	print('')
 
 
@@ -170,11 +199,11 @@ def main():
 			batch_ct_loss /= batch_size
 
 			optimizer.zero_grad()
-			batch_loss_final = alphaI*batch_id_loss + alphaC*batch_ct_loss
+			batch_loss_final = alphaI*batch_id_loss+alphaC*batch_ct_loss
 			batch_loss_final.backward()
-			nn.utils.clip_grad_norm_(sync_net.parameters(), max_norm=10, norm_type=2)
-			if TP['affine']:
-				nn.utils.clip_grad_norm_(affine_net.parameters(), max_norm=10, norm_type=2)
+			# nn.utils.clip_grad_norm_(sync_net.parameters(), max_norm=10, norm_type=2)
+			# if TP['affine']:
+			# 	nn.utils.clip_grad_norm_(affine_net.parameters(), max_norm=10, norm_type=2)
 			optimizer.step()
 
 			# ==========计量更新============================
@@ -185,9 +214,12 @@ def main():
 			epoch_timer.update(time.time())
 			batch_cnt += 1
 			print('\rBatch:(%02d/%d)'%(batch_cnt, len(train_loader)),
-			      epoch_timer, epoch_id_acc, epoch_id_rand_acc,
-			      epoch_loss_final, epoch_id_loss, end='             ')
-		print('Epoch:', epoch, epoch_loss_final, epoch_id_acc, epoch_id_rand_acc,
+			      epoch_timer, epoch_loss_final,
+			      epoch_id_acc, epoch_id_rand_acc, epoch_id_loss,
+			      epoch_ct_acc, epoch_ct_rand_acc, epoch_ct_loss, end='             ')
+		print('Epoch:', epoch, epoch_loss_final,
+		      epoch_id_acc, epoch_id_rand_acc, epoch_id_loss,
+		      epoch_ct_acc, epoch_ct_rand_acc, epoch_ct_loss,
 		      file=file_train_log)
 		for meter in epoch_reset_list:
 			meter.reset()
