@@ -16,6 +16,9 @@ class InfoNCE(nn.Module):
 		if self.affine:
 			self.affine_net = AffineModel()
 
+	def __str__(self):
+		return 'InfoNCE'
+
 	def forward(self, label_tensor, feature_a, feature_b=None):
 		# ======================参数调整==================
 		if feature_b is None:

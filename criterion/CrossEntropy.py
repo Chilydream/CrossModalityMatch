@@ -12,6 +12,9 @@ class CrossEntropy(nn.Module):
 		if affine:
 			self.affine_net = AffineModel()
 
+	def __str__(self):
+		return 'CrossEntropy'
+
 	def forward(self, label_tensor, feature_a, feature_b):
 		# ========================参数设置======================
 		if len(feature_a.size()) == 2:

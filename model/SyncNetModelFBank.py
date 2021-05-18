@@ -102,6 +102,10 @@ class SyncNetModel(nn.Module):
 		self.torchfb = torchaudio.transforms.MelSpectrogram(sample_rate=16000, n_fft=512, win_length=400,
 		                                                    hop_length=160, f_min=0.0, f_max=8000, pad=0, n_mels=40)
 
+	def load(self, model_path):
+		model_ckpt = torch.load(model_path)
+		self.load_state_dict(model_ckpt['sync_net'])
+
 	# @torchsnooper.snoop()
 	def forward_vid(self, x):
 		## Image stream

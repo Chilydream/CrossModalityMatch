@@ -14,3 +14,8 @@ def SampleFromTime(a, method='random'):
 	elif method.lower() in {'mean', 'm'}:
 		b = a.mean(dim=2)
 		return b
+	elif method.lower() in {'rm', 'mr'}:
+		time_size = a.size()[2]
+		b = a[:, :, np.random.randint(0, time_size, 3)]
+		b = b.mean(dim=2)
+		return b

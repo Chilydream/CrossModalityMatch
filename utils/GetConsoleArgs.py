@@ -45,8 +45,13 @@ def get_console_args():
 	TP['lr'] = args.lr
 	TP['temperature'] = args.temperature
 	TP['temporal_gap'] = args.temporal_gap
+	TP['merge_win'] = args.merge_win
 	TP['valid_step'] = args.valid_step
 	TP['gpu'] = not args.cpu
+
+	TP['alphaI'] = args.alphaI
+	TP['alphaC'] = args.alphaC
+
 	TP['exp_dir'] = args.exp_dir
 	TP['exp_num'] = args.exp_num
 	TP['train_list'] = args.train_list

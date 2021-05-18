@@ -3,6 +3,8 @@ import os
 import time
 import torch
 from torch import nn
+import torch.nn.functional as F
+import wandb
 
 from model.SyncNetModelFBank import SyncNetModel
 from utils.ContentTransform import ContentTransform
@@ -31,7 +33,7 @@ def acc_valid(valid_loader, sync_net, criterion, logfile=None):
 	valid_id_rand_acc = Meter('ID Rand ACC', 'avg', ':.2f', '%')
 	valid_ct_acc = Meter('CT ACC', 'avg', ':.2f', '%,')
 	valid_ct_rand_acc = Meter('CT Rand ACC', 'avg', ':.2f', '%,')
-	valid_ct_rand_acc.update(1/merge_size)
+	valid_ct_rand_acc.update(100/merge_size)
 	valid_loss = Meter('Loss', 'avg', ':.2f')
 	valid_id_loss = Meter('ID Loss', 'avg', ':.2f')
 	valid_ct_loss = Meter('CT Loss', 'avg', ':.2f')
@@ -49,7 +51,7 @@ def acc_valid(valid_loader, sync_net, criterion, logfile=None):
 			video_random_id = SampleFromTime(video_id, TP['reduce_method']).unsqueeze(2)
 			# (batch_size, feature, 1)
 
-			id_loss, id_score = criterion(data_label, audio_random_id, video_random_id)
+			id_loss, id_score = criterion(dumb_id_label, audio_random_id, video_random_id)
 			id_acc = topk_acc(id_score, data_label)
 			id_rand_acc = rand_acc(data_label)
 
@@ -75,6 +77,11 @@ def acc_valid(valid_loader, sync_net, criterion, logfile=None):
 			      valid_ct_acc, valid_ct_rand_acc, valid_ct_loss,
 			      end='       ')
 			torch.cuda.empty_cache()
+		wandb.log({'valid loss': valid_loss.avg,
+		           'valid id loss': valid_id_loss.avg,
+		           'valid ct loss': valid_ct_loss.avg,
+		           'valid id acc': valid_id_acc.avg,
+		           'valid ct acc': valid_ct_acc.avg})
 		if logfile is not None:
 			print(valid_loss, valid_id_acc, valid_id_rand_acc, valid_id_loss,
 			      valid_ct_acc, valid_ct_rand_acc, valid_ct_loss,
@@ -121,6 +128,12 @@ def main():
 	sync_net.train()
 	criterion.train()
 
+	# ============================WandB日志=============================
+	wandb.init(project='CrossModalityMatch', config=TP)
+	tmp_config = wandb.config
+	print(tmp_config)
+	wandb.watch(sync_net)
+
 	# ============================度量载入===============================
 	epoch_loss_final = Meter('Final Loss', 'avg', ':.2f')
 	epoch_id_loss = Meter('ID Loss', 'avg', ':.2f')
@@ -131,7 +144,7 @@ def main():
 	epoch_ct_rand_acc = Meter('CT Rand ACC', 'avg', ':.2f', '%,')
 	epoch_timer = Meter('Time', 'time', ':3.0f')
 
-	epoch_ct_rand_acc.update(1/time_size)
+	epoch_ct_rand_acc.update(100/merge_size)
 	epoch_reset_list = [epoch_loss_final, epoch_timer,
 	                    epoch_id_loss, epoch_id_acc, epoch_id_rand_acc,
 	                    epoch_ct_loss, epoch_ct_acc, ]
@@ -192,10 +205,12 @@ def main():
 
 			# ======================计算内容损失===========================
 			batch_ct_loss = 0
+			batch_ct_acc = 0
 			for a_merge, v_merge in ContentTransform(audio_ct, video_ct, merge_win, TP['gpu']):
 				tmp_ct_loss, tmp_ct_score = criterion(dumb_ct_label, a_merge, v_merge)
 				batch_ct_loss += tmp_ct_loss
-				epoch_ct_acc.update(topk_acc(tmp_ct_score, dumb_ct_label)*100)
+				# epoch_ct_acc.update(topk_acc(tmp_ct_score, dumb_ct_label)*100)
+				batch_ct_acc += topk_acc(tmp_ct_score, dumb_ct_label)/batch_size
 			batch_ct_loss /= batch_size
 
 			optimizer.zero_grad()
@@ -210,17 +225,29 @@ def main():
 			epoch_id_acc.update(batch_id_acc*100)
 			epoch_id_rand_acc.update(id_rand_acc*100)
 			epoch_id_loss.update(batch_id_loss.item())
+			epoch_ct_acc.update(batch_ct_acc*100)
+			epoch_ct_loss.update(batch_ct_loss.item())
 			epoch_loss_final.update(batch_loss_final.item())
 			epoch_timer.update(time.time())
 			batch_cnt += 1
+			# wandb.log({'final loss': batch_loss_final.item(),
+			#            'id loss': batch_id_loss.item(),
+			#            'ct loss': batch_ct_loss.item(),
+			#            'id acc': batch_id_acc,
+			#            'ct acc': batch_ct_acc})
 			print('\rBatch:(%02d/%d)'%(batch_cnt, len(train_loader)),
-			      epoch_timer, epoch_loss_final,
-			      epoch_id_acc, epoch_id_rand_acc, epoch_id_loss,
-			      epoch_ct_acc, epoch_ct_rand_acc, epoch_ct_loss, end='             ')
-		print('Epoch:', epoch, epoch_loss_final,
-		      epoch_id_acc, epoch_id_rand_acc, epoch_id_loss,
-		      epoch_ct_acc, epoch_ct_rand_acc, epoch_ct_loss,
+			      epoch_timer, epoch_loss_final, epoch_id_loss, epoch_ct_loss,
+			      epoch_id_acc, epoch_id_rand_acc,
+			      epoch_ct_acc, epoch_ct_rand_acc, end='             ')
+		print('Epoch:', epoch, epoch_loss_final, epoch_id_loss, epoch_ct_loss,
+		      epoch_id_acc, epoch_id_rand_acc,
+		      epoch_ct_acc, epoch_ct_rand_acc,
 		      file=file_train_log)
+		wandb.log({'final loss': epoch_loss_final.avg,
+		           'id loss': epoch_id_loss.avg,
+		           'ct loss': epoch_ct_loss.avg,
+		           'id acc': epoch_id_acc.avg,
+		           'ct acc': epoch_ct_acc.avg})
 		for meter in epoch_reset_list:
 			meter.reset()
 		if TP['gpu']:
@@ -243,6 +270,7 @@ def main():
 			sync_net.train()
 			criterion.train()
 	file_train_log.close()
+	wandb.finish()
 
 
 if __name__ == '__main__':

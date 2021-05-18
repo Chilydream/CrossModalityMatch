@@ -8,7 +8,7 @@ TRAIN_PARAMETER = {
 	'batch_size': 30,
 	'embedding_size': 1024,
 	'num_workers': 4,
-	'lr': 1e-5,
+	'lr': 1e-3,
 	'temperature': 0.07,
 	'temporal_gap': 1,
 	'merge_win': 3,
@@ -16,7 +16,7 @@ TRAIN_PARAMETER = {
 	'gpu': True,
 
 	'alphaI': 1.0,
-	'alphaC': 1.0,
+	'alphaC': 5.0,
 
 	'exp_dir': 'exp',
 	'exp_num': '1',
