@@ -77,16 +77,17 @@ def acc_valid(valid_loader, sync_net, criterion, logfile=None):
 			      valid_ct_acc, valid_ct_rand_acc, valid_ct_loss,
 			      end='       ')
 			torch.cuda.empty_cache()
-		wandb.log({'valid loss': valid_loss.avg,
-		           'valid id loss': valid_id_loss.avg,
-		           'valid ct loss': valid_ct_loss.avg,
-		           'valid id acc': valid_id_acc.avg,
-		           'valid ct acc': valid_ct_acc.avg})
+		valid_log = {'valid loss': valid_loss.avg,
+		             'valid id loss': valid_id_loss.avg,
+		             'valid ct loss': valid_ct_loss.avg,
+		             'valid id acc': valid_id_acc.avg,
+		             'valid ct acc': valid_ct_acc.avg}
 		if logfile is not None:
 			print(valid_loss, valid_id_acc, valid_id_rand_acc, valid_id_loss,
 			      valid_ct_acc, valid_ct_rand_acc, valid_ct_loss,
 			      file=logfile)
 	print('')
+	return valid_log
 
 
 def main():
@@ -217,8 +218,13 @@ def main():
 			batch_loss_final = alphaI*batch_id_loss+alphaC*batch_ct_loss
 			batch_loss_final.backward()
 			# nn.utils.clip_grad_norm_(sync_net.parameters(), max_norm=10, norm_type=2)
-			# if TP['affine']:
-			# 	nn.utils.clip_grad_norm_(affine_net.parameters(), max_norm=10, norm_type=2)
+			if TP['affine']:
+				print('W grad before clip:', str(affine_net.w.grad))
+				print('B grad before clip:', str(affine_net.b.grad))
+				nn.utils.clip_grad_value_(affine_net.parameters(), clip_value=1.1)
+				# nn.utils.clip_grad_norm_(affine_net.parameters(), max_norm=10, norm_type=2)
+				print('W grad after clip:', str(affine_net.w.grad))
+				print('B grad after clip:', str(affine_net.b.grad))
 			optimizer.step()
 
 			# ==========计量更新============================
@@ -230,11 +236,6 @@ def main():
 			epoch_loss_final.update(batch_loss_final.item())
 			epoch_timer.update(time.time())
 			batch_cnt += 1
-			# wandb.log({'final loss': batch_loss_final.item(),
-			#            'id loss': batch_id_loss.item(),
-			#            'ct loss': batch_ct_loss.item(),
-			#            'id acc': batch_id_acc,
-			#            'ct acc': batch_ct_acc})
 			print('\rBatch:(%02d/%d)'%(batch_cnt, len(train_loader)),
 			      epoch_timer, epoch_loss_final, epoch_id_loss, epoch_ct_loss,
 			      epoch_id_acc, epoch_id_rand_acc,
@@ -243,11 +244,11 @@ def main():
 		      epoch_id_acc, epoch_id_rand_acc,
 		      epoch_ct_acc, epoch_ct_rand_acc,
 		      file=file_train_log)
-		wandb.log({'final loss': epoch_loss_final.avg,
-		           'id loss': epoch_id_loss.avg,
-		           'ct loss': epoch_ct_loss.avg,
-		           'id acc': epoch_id_acc.avg,
-		           'ct acc': epoch_ct_acc.avg})
+		log_dict = {'final loss': epoch_loss_final.avg,
+		            'id loss': epoch_id_loss.avg,
+		            'ct loss': epoch_ct_loss.avg,
+		            'id acc': epoch_id_acc.avg,
+		            'ct acc': epoch_ct_acc.avg}
 		for meter in epoch_reset_list:
 			meter.reset()
 		if TP['gpu']:
@@ -263,12 +264,15 @@ def main():
 			            'sync_net': sync_net.state_dict(),
 			            'optimizer': optimizer.state_dict()},
 			           cache_dir+"/model%09d.model"%epoch)
+		valid_log = dict()
 		if (epoch+1)%TP['valid_step'] == 0:
 			sync_net.eval()
 			criterion.eval()
-			acc_valid(valid_loader, sync_net, criterion, file_train_log)
+			valid_log = acc_valid(valid_loader, sync_net, criterion, file_train_log)
 			sync_net.train()
 			criterion.train()
+		log_dict.update(valid_log)
+		wandb.log(log_dict)
 	file_train_log.close()
 	wandb.finish()
 

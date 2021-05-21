@@ -10,8 +10,8 @@ TRAIN_PARAMETER = {
 	'num_workers': 4,
 	'lr': 1e-3,
 	'temperature': 0.07,
-	'temporal_gap': 1,
-	'merge_win': 3,
+	'temporal_gap': 3,
+	'merge_win': 2 ,
 	'valid_step': 5,
 	'gpu': True,
 
@@ -23,7 +23,7 @@ TRAIN_PARAMETER = {
 	'train_list': "data/train.txt",
 	'test_list': 'data/test.txt',
 
-	'reduce_method': 'random',
+	'reduce_method': 'rm',
 	'criterion': InfoNCE,
 	'affine': False,
 	'affine_lr': 1e-5,

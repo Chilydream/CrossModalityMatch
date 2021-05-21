@@ -33,7 +33,7 @@ def get_console_args():
 
 	parser.add_argument('--reduce_method', type=str, default=TP['reduce_method'])
 	parser.add_argument('--criterion', type=str)
-	parser.add_argument('--affine', action='store_true', default=TP['affine'])
+	parser.add_argument('-a', '--affine', action='store_true', default=TP['affine'])
 	parser.add_argument('--affine_lr', type=float)
 	args = parser.parse_args()
 

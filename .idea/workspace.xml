@@ -5,12 +5,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CrossModality.py" beforeDir="false" afterPath="$PROJECT_DIR$/CrossModality.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/TrainConfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/TrainConfig.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/criterion/CrossEntropy.py" beforeDir="false" afterPath="$PROJECT_DIR$/criterion/CrossEntropy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/criterion/InfoNCE.py" beforeDir="false" afterPath="$PROJECT_DIR$/criterion/InfoNCE.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/SyncNetModelFBank.py" beforeDir="false" afterPath="$PROJECT_DIR$/model/SyncNetModelFBank.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tmp.py" beforeDir="false" afterPath="$PROJECT_DIR$/tmp.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/utils/GetConsoleArgs.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/GetConsoleArgs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/sampler.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/sampler.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +110,10 @@
       <workItem from="1621239272020" duration="2717000" />
       <workItem from="1621244352785" duration="212000" />
       <workItem from="1621244576194" duration="5310000" />
-      <workItem from="1621318017239" duration="12036000" />
+      <workItem from="1621318017239" duration="12572000" />
+      <workItem from="1621406817658" duration="2827000" />
+      <workItem from="1621470718352" duration="5147000" />
+      <workItem from="1621583183150" duration="3794000" />
     </task>
     <task id="LOCAL-00001" summary="为手写的criterion添加了cuda函数">
       <created>1621153572158</created>
@@ -152,7 +150,14 @@
       <option name="project" value="LOCAL" />
       <updated>1621324710426</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="加入了wandb日志">
+      <created>1621331580712</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1621331580712</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -164,7 +169,8 @@
     <MESSAGE value="即将添加wandb以及内容向量的比较" />
     <MESSAGE value="添加了内容特征的计算" />
     <MESSAGE value="修改了criterion，去除了无意义的cuda操作" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改了criterion，去除了无意义的cuda操作" />
+    <MESSAGE value="加入了wandb日志" />
+    <option name="LAST_COMMIT_MESSAGE" value="加入了wandb日志" />
   </component>
   <component name="WindowStateProjectService">
     <state x="330" y="94" key="#Deployment" timestamp="1620824193998">
@@ -183,40 +189,44 @@
       <screen x="0" y="0" width="1474" height="864" />
     </state>
     <state x="251" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1621080748926" />
-    <state x="354" y="27" width="1375" height="810" key="CommitChangelistDialog2" timestamp="1621324708865">
+    <state x="354" y="27" width="1375" height="810" key="CommitChangelistDialog2" timestamp="1621331578081">
       <screen x="0" y="0" width="1474" height="864" />
     </state>
     <state x="99" y="27" width="1375" height="810" key="CommitChangelistDialog2/0.0.1474.864@0.0.1474.864" timestamp="1621215749519" />
-    <state x="354" y="27" key="CommitChangelistDialog2/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1621324708865" />
+    <state x="354" y="27" key="CommitChangelistDialog2/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1621331578081" />
     <state x="518" y="190" key="FileChooserDialogImpl" timestamp="1620895055827">
       <screen x="0" y="0" width="1474" height="864" />
     </state>
     <state x="518" y="190" key="FileChooserDialogImpl/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1620895055827" />
-    <state width="1430" height="325" key="GridCell.Tab.0.bottom" timestamp="1621324058276">
+    <state width="1430" height="325" key="GridCell.Tab.0.bottom" timestamp="1621332105109">
       <screen x="0" y="0" width="1474" height="864" />
     </state>
+    <state width="1430" height="325" key="GridCell.Tab.0.bottom/0.0.1474.864@0.0.1474.864" timestamp="1621332105109" />
     <state width="1430" height="325" key="GridCell.Tab.0.bottom/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1621324058276" />
-    <state width="1430" height="325" key="GridCell.Tab.0.center" timestamp="1621324058276">
+    <state width="1430" height="325" key="GridCell.Tab.0.center" timestamp="1621332105108">
       <screen x="0" y="0" width="1474" height="864" />
     </state>
+    <state width="1430" height="325" key="GridCell.Tab.0.center/0.0.1474.864@0.0.1474.864" timestamp="1621332105108" />
     <state width="1430" height="325" key="GridCell.Tab.0.center/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1621324058276" />
-    <state width="1430" height="325" key="GridCell.Tab.0.left" timestamp="1621324058276">
+    <state width="1430" height="325" key="GridCell.Tab.0.left" timestamp="1621332105108">
       <screen x="0" y="0" width="1474" height="864" />
     </state>
+    <state width="1430" height="325" key="GridCell.Tab.0.left/0.0.1474.864@0.0.1474.864" timestamp="1621332105108" />
     <state width="1430" height="325" key="GridCell.Tab.0.left/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1621324058276" />
-    <state width="1430" height="325" key="GridCell.Tab.0.right" timestamp="1621324058276">
+    <state width="1430" height="325" key="GridCell.Tab.0.right" timestamp="1621332105108">
       <screen x="0" y="0" width="1474" height="864" />
     </state>
+    <state width="1430" height="325" key="GridCell.Tab.0.right/0.0.1474.864@0.0.1474.864" timestamp="1621332105108" />
     <state width="1430" height="325" key="GridCell.Tab.0.right/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1621324058276" />
     <state x="241" y="77" key="SettingsEditor" timestamp="1620824169938">
       <screen x="0" y="0" width="1474" height="864" />
     </state>
     <state x="241" y="77" key="SettingsEditor/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1620824169938" />
-    <state x="330" y="168" key="Vcs.Push.Dialog.v2" timestamp="1621324713303">
+    <state x="330" y="168" key="Vcs.Push.Dialog.v2" timestamp="1621331591899">
       <screen x="0" y="0" width="1474" height="864" />
     </state>
     <state x="330" y="168" key="Vcs.Push.Dialog.v2/0.0.1474.864@0.0.1474.864" timestamp="1621215761421" />
-    <state x="330" y="168" key="Vcs.Push.Dialog.v2/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1621324713303" />
+    <state x="330" y="168" key="Vcs.Push.Dialog.v2/1920.0.1842.1080/0.0.1474.864@0.0.1474.864" timestamp="1621331591899" />
     <state x="93" y="93" width="1354" height="678" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1621068208889">
       <screen x="0" y="0" width="1474" height="864" />
     </state>
