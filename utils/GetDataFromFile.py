@@ -10,6 +10,8 @@ from scipy.io import wavfile
 
 def loadWAV(filename, max_frames, start_frame=0, evalmode=False, num_eval=10):
 	npy_name = filename+'.npy'
+	npy_name = npy_name.replace('/', '_').replace('\\', '_')
+	npy_name = os.path.join('/hdd_data/fsx/CrossModalityMatch/cache', npy_name)
 	if os.path.exists(npy_name):
 		feat = np.load(npy_name, allow_pickle=True)
 	else:
@@ -61,6 +63,8 @@ def make_image_square(img):
 
 def get_frames(filename, max_frames=100, start_frame=0):
 	npy_name = filename+'.npy'
+	npy_name = npy_name.replace('/', '_').replace('\\', '_')
+	npy_name = os.path.join('/hdd_data/fsx/CrossModalityMatch/cache', npy_name)
 	if os.path.exists(npy_name):
 		im = np.load(npy_name, allow_pickle=True)
 	else:

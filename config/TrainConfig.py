@@ -2,7 +2,7 @@ from criterion.InfoNCE import InfoNCE
 
 TRAIN_PARAMETER = {
 	'mode': 'train',
-	'pretrain_model': '/GPUFS/ruc_tliu_1/fsx/CrossModalityMatch/exp/1/cache/model000000009.model',
+	'pretrain_model': '',
 
 	'epoch': 100,
 	'batch_size': 30,
@@ -13,6 +13,7 @@ TRAIN_PARAMETER = {
 	'temporal_gap': 3,
 	'merge_win': 2 ,
 	'valid_step': 5,
+	'dis_step': 1,
 	'gpu': True,
 
 	'alphaI': 1.0,
@@ -20,8 +21,8 @@ TRAIN_PARAMETER = {
 
 	'exp_dir': 'exp',
 	'exp_num': '1',
-	'train_list': "data/train.txt",
-	'test_list': 'data/test.txt',
+	'train_list': "data/train_part.txt",
+	'test_list': 'data/test_part.txt',
 
 	'reduce_method': 'rm',
 	'criterion': InfoNCE,

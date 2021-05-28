@@ -21,6 +21,7 @@ def get_console_args():
 	parser.add_argument('-t', '--temporal_gap', type=int, default=TP['temporal_gap'])
 	parser.add_argument('-w', '--merge_win', type=int, default=TP['merge_win'])
 	parser.add_argument('-v', '--valid_step', type=int, default=TP['valid_step'])
+	parser.add_argument('-d', '--dis_step', type=int, default=TP['dis_step'])
 	parser.add_argument('--cpu', action='store_true', default=not TP['gpu'])
 
 	parser.add_argument('-i', '--alphaI', type=float, default=TP['alphaI'])
@@ -47,6 +48,7 @@ def get_console_args():
 	TP['temporal_gap'] = args.temporal_gap
 	TP['merge_win'] = args.merge_win
 	TP['valid_step'] = args.valid_step
+	TP['dis_step'] = args.dis_step
 	TP['gpu'] = not args.cpu
 
 	TP['alphaI'] = args.alphaI
